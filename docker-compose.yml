@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: ${DB_CONTAINER_NAME:-postgres-db}
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME:-postgres-db}
+      POSTGRES_USER: ${DB_USER:-postgres-user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+  #    volumes:
+  #    - postgres-data:/var/lib/postgresql/data  # Add volume for data persistence
