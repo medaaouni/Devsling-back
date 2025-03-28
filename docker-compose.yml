@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:latest
-    container_name: ${DB_CONTAINER_NAME:-postgres-db}
+    container_name: ${DB_CONTAINER_NAME:-postgres-db-container}
     ports:
       - "5432:5432"
     restart: always
