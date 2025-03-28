@@ -2,6 +2,7 @@ package com.assignement.car_sales_garage.services;
 
 
 import com.assignement.car_sales_garage.TestDataUtil;
+import com.assignement.car_sales_garage.domain.dtos.CarRequestDto;
 import com.assignement.car_sales_garage.domain.entities.Car;
 import com.assignement.car_sales_garage.exceptions.InvalidCarException;
 import com.assignement.car_sales_garage.services.impl.CarServiceImpl;
@@ -21,14 +22,15 @@ public class CarServiceTests {
     CarServiceImpl underTest;
 
     @Test
-    public void shouldRejectCarsRegisteredAfter2015() {
+    public void whenRegisterCarBefore2015__thenRejectCar() {
 
-        Car oldCar = TestDataUtil.createCarEntity();
+        CarRequestDto oldCar = TestDataUtil.createCarDtoRequest();
 
         assertThatThrownBy(() -> underTest.addCar(oldCar))
                 .isInstanceOf(InvalidCarException.class)
                 .hasMessageContaining("Car registered before 2015 is not allowed");
     }
+
 
 
 }
