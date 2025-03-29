@@ -38,4 +38,9 @@ public class CarServiceImpl implements CarService {
         List<Car> cars = carRepository.findByFuelTypeAndPriceLessThanEqual(fuelType, price);
         return cars.stream().map(carMapper::toDto).toList();
     }
+
+    @Override
+    public List<String> getAllAvailableMakes() {
+        return carRepository.findAllAvailableMakes();
+    }
 }

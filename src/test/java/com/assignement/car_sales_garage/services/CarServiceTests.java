@@ -85,7 +85,7 @@ public class CarServiceTests {
 
         List<String> expected = List.of("Mercedes", "Toyota");
 
-        when(carRepository.findAllMakes()).thenReturn(expected);
+        when(carRepository.findAllAvailableMakes()).thenReturn(expected);
 
         assertThat(underTest.getAllAvailableMakes()).hasSize(2);
     }

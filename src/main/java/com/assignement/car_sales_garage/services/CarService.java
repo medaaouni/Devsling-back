@@ -10,4 +10,5 @@ import java.util.List;
 public interface CarService {
     CarResponseDto addCar(CarRequestDto carRequestDto);
     List<CarResponseDto> getCarsByFuelTypeAndMaxPrice(FuelType fuelType, Integer price);
+    List<String> getAllAvailableMakes();
 }
