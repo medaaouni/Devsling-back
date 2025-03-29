@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.util.Arrays;
 
 @ControllerAdvice
 @RestController
@@ -33,5 +36,22 @@ public class ExceptionController {
                 .build();
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+
+        String message = "Invalid value for parameter '" + ex.getName() + "'";
+
+        if (ex.getRequiredType() != null && ex.getRequiredType().isEnum()) {
+            String allowedValues = Arrays.toString(ex.getRequiredType().getEnumConstants());
+            message += ". Allowed values: " + allowedValues;
+        }
+
+        return ResponseEntity.badRequest()
+                .body(ApiErrorResponse.builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .message(message)
+                        .build());
     }
 }
