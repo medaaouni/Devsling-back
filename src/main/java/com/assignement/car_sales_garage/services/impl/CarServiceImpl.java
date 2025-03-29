@@ -3,12 +3,15 @@ package com.assignement.car_sales_garage.services.impl;
 import com.assignement.car_sales_garage.domain.dtos.CarRequestDto;
 import com.assignement.car_sales_garage.domain.dtos.CarResponseDto;
 import com.assignement.car_sales_garage.domain.entities.Car;
+import com.assignement.car_sales_garage.enums.FuelType;
 import com.assignement.car_sales_garage.exceptions.InvalidCarException;
 import com.assignement.car_sales_garage.mapper.CarMapper;
 import com.assignement.car_sales_garage.repositories.CarRepository;
 import com.assignement.car_sales_garage.services.CarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,5 +31,11 @@ public class CarServiceImpl implements CarService {
             return carMapper.toDto(savedCar) ;
 
         }
+    }
+
+    @Override
+    public List<CarResponseDto> getCarsByFuelTypeAndMaxPrice(FuelType fuelType, Integer price) {
+        List<Car> cars = carRepository.findByFuelTypeAndPriceLessThanEqual(fuelType, price);
+        return cars.stream().map(carMapper::toDto).toList();
     }
 }
