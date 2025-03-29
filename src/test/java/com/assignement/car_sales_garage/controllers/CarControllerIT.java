@@ -98,4 +98,21 @@ public class CarControllerIT {
         );
     }
 
+    @Test
+    public void whenGetMakes_thenReturnAllAvailableMakes() throws Exception {
+
+        CarRequestDto carRequest = TestDataUtil.createCarRequestDto();
+        carService.addCar(carRequest);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/cars/makes")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.length()").value(1)
+        );
+
+    }
+
 }
