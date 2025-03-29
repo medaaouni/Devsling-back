@@ -80,5 +80,15 @@ public class CarServiceTests {
         assertThat(underTest.getCarsByFuelTypeAndMaxPrice(FuelType.HYBRID,100)).hasSize(0);
     }
 
+    @Test
+    public void whenGetMakes_thenReturnAllAvailableMakes() {
+
+        List<String> expected = List.of("Mercedes", "Toyota");
+
+        when(carRepository.findAllMakes()).thenReturn(expected);
+
+        assertThat(underTest.getAllAvailableMakes()).hasSize(2);
+    }
+
 
 }
