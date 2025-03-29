@@ -4,6 +4,7 @@ package com.assignement.car_sales_garage.controllers;
 import com.assignement.car_sales_garage.TestDataUtil;
 import com.assignement.car_sales_garage.domain.dtos.CarRequestDto;
 import com.assignement.car_sales_garage.services.CarService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,8 @@ public class CarControllerIT {
     @Autowired
     public CarControllerIT(MockMvc mockMvc) {
         this.mockMvc = mockMvc;
-        this.objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());;
+        this.objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        ;
     }
 
     @Test
@@ -62,6 +64,22 @@ public class CarControllerIT {
                 MockMvcResultMatchers.status().isCreated()
         );
 
+    }
+
+    @Test
+    public void whenGetCarsByFuelTypeAndMaxPrice_thenReturnFilteredCars() throws Exception {
+
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/cars")
+                        .param("fuelType", "DIESEL")
+                        .param("maxPrice", "15000")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[0].fuelType").value("DIESEL")
+        );
     }
 
 }
