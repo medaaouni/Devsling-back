@@ -25,13 +25,14 @@ public class CarControllerIT {
 
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
+    private final CarService carService;
 
 
     @Autowired
-    public CarControllerIT(MockMvc mockMvc) {
+    public CarControllerIT(MockMvc mockMvc, CarService carService) {
         this.mockMvc = mockMvc;
+        this.carService = carService;
         this.objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-        ;
     }
 
     @Test
@@ -69,15 +70,18 @@ public class CarControllerIT {
     @Test
     public void whenGetCarsByFuelTypeAndMaxPrice_thenReturnFilteredCars() throws Exception {
 
+        CarRequestDto carRequest = TestDataUtil.createCarRequestDto();
+        carService.addCar(carRequest);
+
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/cars")
-                        .param("fuelType", "test")
+                        .param("fuelType", "DIESEL")
                         .param("maxPrice", "15000")
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
                 MockMvcResultMatchers.status().isOk()
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$[0].fuelType").value("DIESEL")
+                MockMvcResultMatchers.jsonPath("$[0].price").value(15000)
         );
     }
 
