@@ -72,5 +72,13 @@ public class CarServiceTests {
         assertThat(underTest.getCarsByFuelTypeAndMaxPrice(FuelType.DIESEL,15000)).hasSize(1);
     }
 
+    @Test
+    public void whenGetCarsByFuelTypeAndMaxPrice_withNoMatchingCar_thenReturnEmptyList() {
+
+        when(carRepository.findByFuelTypeAndPriceLessThanEqual(eq(FuelType.HYBRID),eq(100))).thenReturn(List.of());
+
+        assertThat(underTest.getCarsByFuelTypeAndMaxPrice(FuelType.HYBRID,100)).hasSize(0);
+    }
+
 
 }
