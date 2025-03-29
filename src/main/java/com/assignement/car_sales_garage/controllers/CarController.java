@@ -30,4 +30,10 @@ public class CarController {
         List<CarResponseDto> cars = carService.getCarsByFuelTypeAndMaxPrice(fuelType, maxPrice);
         return ResponseEntity.ok(cars);
     }
+
+    @GetMapping(path = "/makes")
+    public ResponseEntity<List<String>> getAvailableMakes(){
+        List<String> makes = carService.getAllAvailableMakes();
+        return ResponseEntity.ok(makes);
+    }
 }
