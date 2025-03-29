@@ -48,5 +48,20 @@ public class CarControllerIT {
 
     }
 
+    @Test
+    public void whenRequestIsValid_thenCreateCar() throws Exception {
+
+        CarRequestDto carRequest = TestDataUtil.createCarRequestDto();
+        String carJson = objectMapper.writeValueAsString(carRequest);
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/cars")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(carJson)
+        ).andExpect(
+                MockMvcResultMatchers.status().isCreated()
+        );
+
+    }
 
 }
