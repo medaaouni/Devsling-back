@@ -71,13 +71,26 @@ public class CarControllerIT {
 
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/cars")
-                        .param("fuelType", "DIESEL")
+                        .param("fuelType", "test")
                         .param("maxPrice", "15000")
                         .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(
                 MockMvcResultMatchers.status().isOk()
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$[0].fuelType").value("DIESEL")
+        );
+    }
+
+    @Test
+    public void whenGetCarsByInvalidFuelTypeAndMaxPrice_thenReturnBadRequest() throws Exception {
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/cars")
+                        .param("fuelType", "invalidType")
+                        .param("maxPrice", "15000")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isBadRequest()
         );
     }
 
