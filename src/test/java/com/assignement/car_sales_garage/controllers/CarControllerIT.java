@@ -69,7 +69,6 @@ public class CarControllerIT {
     @Test
     public void whenGetCarsByFuelTypeAndMaxPrice_thenReturnFilteredCars() throws Exception {
 
-
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/cars")
                         .param("fuelType", "DIESEL")
