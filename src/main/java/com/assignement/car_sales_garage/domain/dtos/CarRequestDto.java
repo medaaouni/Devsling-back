@@ -2,7 +2,7 @@ package com.assignement.car_sales_garage.domain.dtos;
 
 import com.assignement.car_sales_garage.enums.FuelType;
 import com.assignement.car_sales_garage.enums.Transmission;
-import jakarta.validation.constraints.NotBlank;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
@@ -23,6 +23,7 @@ public class CarRequestDto {
     private String model;
     @PastOrPresent(message = "Registration date cannot be in the future")
     @NotNull(message = "Registration date is required")
+    @Schema(description = "Date when the car was registered", example = "2020-05-20")
     private LocalDateTime registrationDate;
     @Positive(message = "Price must be greater than zero")
     private Integer price;
