@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class CarResponseDto {
+    private Long id;
     private String make;
     private String model;
     private LocalDateTime registrationDate;

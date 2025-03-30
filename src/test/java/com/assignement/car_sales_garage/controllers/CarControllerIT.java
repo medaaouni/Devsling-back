@@ -3,6 +3,7 @@ package com.assignement.car_sales_garage.controllers;
 
 import com.assignement.car_sales_garage.TestDataUtil;
 import com.assignement.car_sales_garage.domain.dtos.CarRequestDto;
+import com.assignement.car_sales_garage.domain.dtos.CarResponseDto;
 import com.assignement.car_sales_garage.services.CarService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,11 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -114,6 +118,29 @@ public class CarControllerIT {
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.length()").value(1)
         );
+
+    }
+
+    @Test
+    void whenCarExists_thenReturnCarWithPicture() throws Exception {
+        CarRequestDto car = TestDataUtil.createCarRequestDto();
+        CarResponseDto savedCar = carService.addCar(car);
+
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "test.jpg",
+                "image/jpeg",
+                "test-image".getBytes()
+        );
+
+
+        mockMvc.perform(multipart("/api/cars/{id}/picture", savedCar.getId())
+                        .file(file)
+                )
+                .andExpect(MockMvcResultMatchers.jsonPath("$.picture").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.status().isOk()
+                );
+
 
     }
 
