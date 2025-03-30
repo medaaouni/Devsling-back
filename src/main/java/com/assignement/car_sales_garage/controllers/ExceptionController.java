@@ -2,6 +2,7 @@ package com.assignement.car_sales_garage.controllers;
 
 
 import com.assignement.car_sales_garage.domain.dtos.ApiErrorResponse;
+import com.assignement.car_sales_garage.exceptions.CarNotFoundException;
 import com.assignement.car_sales_garage.exceptions.InvalidCarException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,13 +30,24 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(InvalidCarException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(InvalidCarException ex) {
+    public ResponseEntity<ApiErrorResponse> handleInvalidCarException(InvalidCarException ex) {
         ApiErrorResponse error = ApiErrorResponse.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message("Car Not allowed")
                 .build();
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CarNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleCarNotFoundException(CarNotFoundException ex) {
+
+        ApiErrorResponse error = ApiErrorResponse.builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .message(ex.getMessage())
+                .build();
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
