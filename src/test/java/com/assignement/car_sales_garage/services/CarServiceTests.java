@@ -14,7 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -90,5 +92,21 @@ public class CarServiceTests {
         assertThat(underTest.getAllAvailableMakes()).hasSize(2);
     }
 
+
+    @Test
+    public void whenFileEmpty_thenThrowException() {
+        MultipartFile emptyFile = Mockito.mock(MultipartFile.class);
+        when(emptyFile.isEmpty()).thenReturn(true);
+        assertThatThrownBy(() -> underTest.updateCarPicture(1L, emptyFile))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void whenFileNoValid_thenThrowException() {
+        MultipartFile picture = Mockito.mock(MultipartFile.class);
+        when(picture.getContentType()).thenReturn("text/plain");
+        assertThatThrownBy(() -> underTest.updateCarPicture(1L, picture))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 
 }
