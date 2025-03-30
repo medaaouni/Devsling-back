@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -32,8 +34,14 @@ public class CarController {
     }
 
     @GetMapping(path = "/makes")
-    public ResponseEntity<List<String>> getAvailableMakes(){
+    public ResponseEntity<List<String>> getAvailableMakes() {
         List<String> makes = carService.getAllAvailableMakes();
         return ResponseEntity.ok(makes);
+    }
+
+    @PatchMapping(path = "/{id}/picture")
+    public ResponseEntity<CarResponseDto> updateCarPicture(@PathVariable Long id, @RequestParam("file") MultipartFile picture) throws IOException {
+        CarResponseDto carResponseDto = carService.updateCarPicture(id, picture);
+        return ResponseEntity.ok(carResponseDto);
     }
 }

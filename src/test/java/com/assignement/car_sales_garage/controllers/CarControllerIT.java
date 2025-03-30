@@ -134,8 +134,13 @@ public class CarControllerIT {
         );
 
 
-        mockMvc.perform(multipart("/api/cars/{id}/picture", savedCar.getId())
+        mockMvc.perform(multipart("/cars/"+savedCar.getId()+"/picture", savedCar.getId())
                         .file(file)
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .with(request -> {
+                            request.setMethod("PATCH");
+                            return request;
+                        })
                 )
                 .andExpect(MockMvcResultMatchers.jsonPath("$.picture").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.status().isOk()

@@ -9,6 +9,7 @@ import com.assignement.car_sales_garage.exceptions.InvalidCarException;
 import com.assignement.car_sales_garage.mapper.CarMapper;
 import com.assignement.car_sales_garage.repositories.CarRepository;
 import com.assignement.car_sales_garage.services.CarService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +28,7 @@ public class CarServiceImpl implements CarService {
     private final CarMapper carMapper;
 
     @Override
+    @Transactional
     public CarResponseDto addCar(CarRequestDto carRequestDto) {
         if (carRequestDto.getRegistrationDate().getYear() < 2015) {
             throw new InvalidCarException("Car registered before 2015 is not allowed");
