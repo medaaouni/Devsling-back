@@ -5,6 +5,7 @@ import com.assignement.car_sales_garage.domain.dtos.CarRequestDto;
 import com.assignement.car_sales_garage.domain.dtos.CarResponseDto;
 import com.assignement.car_sales_garage.enums.FuelType;
 import com.assignement.car_sales_garage.services.CarService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class CarController {
     private final CarService carService;
 
     @PostMapping
-    public ResponseEntity<CarResponseDto> createCar(@RequestBody CarRequestDto carRequestDto) {
+    public ResponseEntity<CarResponseDto> createCar(@Valid @RequestBody CarRequestDto carRequestDto) {
         CarResponseDto carResponseDto = carService.addCar(carRequestDto);
         return new ResponseEntity<>(carResponseDto, HttpStatus.CREATED);
     }
