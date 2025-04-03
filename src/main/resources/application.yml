@@ -1,6 +1,10 @@
 spring:
   application:
     name: car-sales-garage
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
 
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:postgres-db}

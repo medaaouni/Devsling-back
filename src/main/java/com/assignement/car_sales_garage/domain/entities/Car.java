@@ -34,7 +34,7 @@ public class Car {
     @Enumerated(EnumType.STRING)
     private Transmission transmission;
 
-    @Column(name = "picture_url")
+    @Column(name = "picture_url" ,columnDefinition = "TEXT")
     private String picture;
 
 
