@@ -50,7 +50,7 @@ public class CarController {
                     @ApiResponse(responseCode = "404", description = "No cars found")
             }
     )
-    public ResponseEntity<List<CarResponseDto>> getCarsByFuelTypeAndMaxPrice(@RequestParam @Parameter(description = "Fuel type of the car") FuelType fuelType, @RequestParam Integer maxPrice) {
+    public ResponseEntity<List<CarResponseDto>> getCarsByFuelTypeAndMaxPrice(@RequestParam(required = false) @Parameter(description = "Fuel type of the car") FuelType fuelType, @RequestParam(required = false) Integer maxPrice) {
         List<CarResponseDto> cars = carService.getCarsByFuelTypeAndMaxPrice(fuelType, maxPrice);
         return ResponseEntity.ok(cars);
     }

@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -24,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
@@ -68,18 +70,39 @@ public class CarServiceTests {
     public void whenGetCarsByFuelTypeAndMaxPrice_thenReturnFilteredCars() {
 
         List<Car> expected = List.of(TestDataUtil.createCarEntity());
+        CarResponseDto carResponseDto = TestDataUtil.createCarResponseDto();
 
-        when(carRepository.findByFuelTypeAndPriceLessThanEqual(eq(FuelType.DIESEL),eq(15000))).thenReturn(expected);
+        when(carMapper.toDto(any(Car.class))).thenReturn(carResponseDto);
 
-        assertThat(underTest.getCarsByFuelTypeAndMaxPrice(FuelType.DIESEL,15000)).hasSize(1);
+        when(carRepository.findAll(any(Specification.class))).thenReturn(expected);
+
+        assertThat(underTest.getCarsByFuelTypeAndMaxPrice(FuelType.DIESEL, 15000)).hasSize(1);
+
+        verify(carRepository).findAll(any(Specification.class));
+
+    }
+
+    @Test
+    void getCarsByFuelTypeAndMaxPrice_shouldFilterByFuelTypeOnly_whenPriceIsNull() {
+        List<Car> expected = List.of(TestDataUtil.createCarEntity());
+        CarResponseDto carResponseDto = TestDataUtil.createCarResponseDto();
+        carResponseDto.setPrice(null);
+        when(carMapper.toDto(any(Car.class))).thenReturn(carResponseDto);
+
+        when(carRepository.findAll(any(Specification.class))).thenReturn(expected);
+
+        assertThat(underTest.getCarsByFuelTypeAndMaxPrice(FuelType.HYBRID, 100)).hasSize(1);
     }
 
     @Test
     public void whenGetCarsByFuelTypeAndMaxPrice_withNoMatchingCar_thenReturnEmptyList() {
 
-        when(carRepository.findByFuelTypeAndPriceLessThanEqual(eq(FuelType.HYBRID),eq(100))).thenReturn(List.of());
+        when(carRepository.findAll(any(Specification.class))).thenReturn(List.of());
 
-        assertThat(underTest.getCarsByFuelTypeAndMaxPrice(FuelType.HYBRID,100)).hasSize(0);
+        assertThat(underTest.getCarsByFuelTypeAndMaxPrice(FuelType.HYBRID, 100)).hasSize(0);
+
+        verify(carRepository).findAll(any(Specification.class));
+
     }
 
     @Test

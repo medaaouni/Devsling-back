@@ -8,9 +8,11 @@ import com.assignement.car_sales_garage.exceptions.CarNotFoundException;
 import com.assignement.car_sales_garage.exceptions.InvalidCarException;
 import com.assignement.car_sales_garage.mapper.CarMapper;
 import com.assignement.car_sales_garage.repositories.CarRepository;
+import com.assignement.car_sales_garage.repositories.specifications.CarSpecifications;
 import com.assignement.car_sales_garage.services.CarService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +20,7 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,8 +45,15 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<CarResponseDto> getCarsByFuelTypeAndMaxPrice(FuelType fuelType, Integer price) {
-        List<Car> cars = carRepository.findByFuelTypeAndPriceLessThanEqual(fuelType, price);
-        return cars.stream().map(carMapper::toDto).toList();
+
+        Specification<Car> specification = Specification.
+                where(CarSpecifications.hasFuelType(fuelType))
+                .and(CarSpecifications.hasPriceLessThan(price));
+
+        return carRepository.findAll(specification)
+                .stream()
+                .map(carMapper::toDto)
+                .toList();
     }
 
     @Override
